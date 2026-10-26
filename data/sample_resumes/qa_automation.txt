@@ -1,0 +1,25 @@
+Hamza Siddiqui
+hamza.siddiqui@example.com | +92 312 4445566
+
+Summary
+QA engineer with 3 years of experience in manual and automated testing of web applications.
+
+Skills
+Selenium WebDriver, Java, TestNG, Cypress, JavaScript, Postman, JMeter, Jira, Agile/Scrum, SQL, Git, Jenkins
+
+Experience
+SQA Engineer, BrightApps (May 2021 - Present)
+• Built a Selenium + Java automation framework covering 400 regression test cases.
+• Wrote end-to-end tests in Cypress for the customer portal.
+• Performed API testing with Postman and load testing with JMeter.
+• Integrated test suites into Jenkins pipelines.
+
+Junior QA, TestHouse (Jun 2020 - Apr 2021)
+• Wrote test cases and performed functional and regression testing.
+• Logged defects in Jira.
+
+Education
+BS Computer Science, Iqra University, 2020
+
+Certifications
+ISTQB Certified Tester Foundation Level

@@ -1,0 +1,26 @@
+Bilal Ahmed
+bilal.ahmed@example.com | 0321-7654321 | Lahore
+
+Summary
+Full stack software engineer specialised in Microsoft technologies and modern single page applications.
+
+Skills
+C#, ASP.NET Core, Web API, Entity Framework Core, SQL Server, Angular, TypeScript, RxJS, HTML5, CSS3, Bootstrap, Git, Azure DevOps
+
+Experience
+Software Engineer, Meridian Tech (Mar 2021 - Present)
+• Developed RESTful services in .NET 6 for a hospital management system.
+• Built Angular front-end modules with reactive forms and RxJS observables.
+• Wrote stored procedures and optimised T-SQL queries, reducing report time by 40%.
+• Implemented JWT based authentication and role based authorization.
+• Set up build and release pipelines in Azure DevOps.
+
+Associate Software Engineer, Softnet (Jul 2019 - Feb 2021)
+• Maintained ASP.NET MVC applications and fixed production bugs.
+• Wrote unit tests using xUnit.
+
+Projects
+Online Banking Portal — microservices with ASP.NET Core, SignalR notifications and Redis caching.
+
+Education
+Bachelor of Science in Software Engineering, COMSATS University, 2019

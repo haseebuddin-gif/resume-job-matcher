@@ -1,0 +1,21 @@
+Zainab Hussain
+zainab.hussain@example.com | +92 322 7778899
+
+Summary
+Business analyst bridging business stakeholders and engineering teams, with 3 years of experience in fintech.
+
+Experience
+Business Analyst, PayEase (Apr 2022 - Present)
+• Gathered requirements from stakeholders and wrote BRDs and user stories.
+• Worked in Scrum teams, groomed the backlog in Jira and documented flows in Confluence.
+• Analysed transaction data with SQL and Excel to identify drop-offs in the payment funnel.
+• Presented findings and recommendations to senior management.
+
+Associate Analyst, DataSense (Jan 2021 - Mar 2022)
+• Built weekly reports and dashboards in Tableau.
+
+Skills
+Requirements Gathering, Business Process Modelling, SQL, Excel, Tableau, Jira, Confluence, Stakeholder Management, Communication
+
+Education
+BBA, LUMS, 2020

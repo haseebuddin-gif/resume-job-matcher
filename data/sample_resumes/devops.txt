@@ -1,0 +1,24 @@
+Usman Tariq
+usman.tariq@example.com | +92 345 9876543
+
+Summary
+Site reliability / DevOps engineer with 4 years of experience automating deployments and running containerised workloads in production.
+
+Technical Skills
+Linux (Ubuntu, CentOS), Bash, Python, Docker, Kubernetes, Helm, Terraform, Ansible, Jenkins, GitLab CI, AWS (EC2, S3, EKS), Prometheus, Grafana, Nginx
+
+Professional Experience
+DevOps Engineer, CloudOps Pvt Ltd (Feb 2021 - Present)
+• Migrated 30 services to Kubernetes using Helm charts.
+• Wrote Terraform modules to provision AWS infrastructure for three environments.
+• Built CI/CD pipelines in Jenkins and GitLab CI that cut release time from days to hours.
+• Set up monitoring and alerting with Prometheus and Grafana.
+
+System Administrator, NetServe (Jan 2019 - Jan 2021)
+• Administered Linux servers, wrote shell scripts for backups and configured Nginx.
+
+Education
+BE Computer Systems Engineering, NED University, 2018
+
+Certifications
+Certified Kubernetes Administrator (CKA)

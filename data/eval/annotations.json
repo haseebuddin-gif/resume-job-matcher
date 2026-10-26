@@ -1,0 +1,45 @@
+{
+  "_note": "Hand-labelled ground truth. gold_skills = skills a human annotator finds in the resume (canonical names from skills.json, including skills described in other words, e.g. 'neural nets' -> Deep Learning). relevant_jobs = job_ids from jobs.json that a human judges suitable for the candidate. Extend this file with more resumes for stronger results.",
+  "resumes": [
+    {
+      "file": "data_scientist.txt", "category": "Data Science",
+      "relevant_jobs": ["J001", "J002", "J003"],
+      "gold_skills": ["Python", "SQL", "Scikit-learn", "Pandas", "NumPy", "Matplotlib", "TensorFlow", "Keras", "NLTK", "Jupyter", "Git", "Power BI", "Machine Learning", "Deep Learning", "Statistics", "Data Analysis", "Data Visualization", "Natural Language Processing", "Transformers", "Time Series"]
+    },
+    {
+      "file": "dotnet_angular_dev.txt", "category": "DotNet Developer",
+      "relevant_jobs": ["J009", "J010"],
+      "gold_skills": ["C#", ".NET", "ASP.NET", "REST API", "Entity Framework", "SQL Server", "Angular", "TypeScript", "RxJS", "HTML", "CSS", "Bootstrap", "Git", "Azure", "CI/CD", "Authentication", "Microservices", "WebSockets", "Redis", "Caching", "Unit Testing"]
+    },
+    {
+      "file": "frontend_react.txt", "category": "Web Designing",
+      "relevant_jobs": ["J011", "J013"],
+      "gold_skills": ["React", "Redux", "JavaScript", "HTML", "CSS", "Sass", "Tailwind CSS", "Figma", "Git", "Unit Testing", "GraphQL", "Next.js", "Adobe Photoshop"]
+    },
+    {
+      "file": "devops.txt", "category": "DevOps Engineer",
+      "relevant_jobs": ["J014", "J015"],
+      "gold_skills": ["Linux", "Bash", "Python", "Docker", "Kubernetes", "Terraform", "Ansible", "Jenkins", "CI/CD", "Git", "AWS", "Monitoring", "Nginx"]
+    },
+    {
+      "file": "hr_executive.txt", "category": "HR",
+      "relevant_jobs": ["J027"],
+      "gold_skills": ["Human Resources", "Excel", "Communication", "Teamwork", "Time Management"]
+    },
+    {
+      "file": "qa_automation.txt", "category": "Automation Testing",
+      "relevant_jobs": ["J020", "J021"],
+      "gold_skills": ["Test Automation", "Java", "Unit Testing", "JavaScript", "API Testing", "Performance Testing", "Manual Testing", "Jira", "Agile", "SQL", "Git", "Jenkins"]
+    },
+    {
+      "file": "fresh_python_grad.txt", "category": "Python Developer",
+      "relevant_jobs": ["J006", "J005"],
+      "gold_skills": ["Python", "Flask", "SQL", "SQLite", "HTML", "CSS", "Git", "Object-Oriented Programming", "Data Structures & Algorithms", "Pandas", "WebSockets", "Debugging"]
+    },
+    {
+      "file": "business_analyst.txt", "category": "Business Analyst",
+      "relevant_jobs": ["J025", "J003"],
+      "gold_skills": ["Business Analysis", "Agile", "Jira", "SQL", "Excel", "Tableau", "Stakeholder Management", "Communication", "Data Visualization"]
+    }
+  ]
+}

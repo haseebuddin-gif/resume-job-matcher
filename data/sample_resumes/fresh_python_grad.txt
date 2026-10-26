@@ -1,0 +1,24 @@
+Ali Raza
+ali.raza@example.com | +92 301 2223344
+
+Objective
+Fresh Computer Science graduate looking for an entry level software developer role.
+
+Education
+Bachelor of Science in Computer Science, University of Engineering and Technology, 2025
+Intermediate (Pre-Engineering), Govt. College, 2021
+
+Skills
+Python, Flask, SQL, SQLite, HTML, CSS, Git, OOP, Data Structures
+
+Projects
+Library Management System — Flask web app with SQLite database and user login.
+Expense Tracker — Python script that reads bank CSV exports with Pandas and generates monthly summaries.
+Chat App — real-time chat using Socket.IO.
+
+Experience
+Teaching Assistant, Programming Fundamentals (Sep 2024 - Jun 2025)
+• Helped 50+ students debug Python assignments.
+
+Achievements
+Top 10 in university programming competition.

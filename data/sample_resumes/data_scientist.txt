@@ -1,0 +1,28 @@
+Ayesha Rahman
+ayesha.rahman@example.com | +92 300 1234567 | github.com/ayesha-sample
+
+Professional Summary
+Data scientist with hands-on experience building predictive models and text analytics solutions. Comfortable taking a project from raw data to a deployed model.
+
+Technical Skills
+Python, SQL, scikit-learn, Pandas, NumPy, Matplotlib, TensorFlow, Keras, NLTK, Jupyter Notebook, Git, Power BI
+
+Work Experience
+Junior Data Scientist, Horizon Telecom (Jan 2022 - Present)
+• Built a customer churn prediction model with gradient boosting, improving retention campaign targeting by 18%.
+• Trained neural nets in Keras to classify customer complaints into 12 categories.
+• Performed exploratory data analysis and statistical modelling on 5M+ call records.
+• Created dashboards for management to track model performance.
+
+Data Analyst Intern, Insight Labs (Jun 2021 - Dec 2021)
+• Cleaned and transformed sales data with Pandas and wrote SQL queries for monthly reports.
+
+Projects
+Sentiment Analysis of Product Reviews — text classification using TF-IDF and logistic regression, later improved with a fine-tuned BERT model.
+Sales Forecasting — time series forecasting with ARIMA and Prophet.
+
+Education
+BS Computer Science, FAST NUCES, 2021
+
+Certifications
+Deep Learning Specialization (Coursera)

@@ -1,0 +1,23 @@
+Sara Khan
+sara.khan@example.com | +92 333 5551234
+
+Profile
+Front-end developer who enjoys turning designs into fast, accessible web interfaces.
+
+Skills
+ReactJS, Redux, JavaScript (ES6), HTML, CSS, SCSS, Tailwind, Figma, Git, Jest
+
+Experience
+Front-End Developer, Webly Studio (Aug 2022 - Present)
+• Built reusable UI component library in React used across 5 client projects.
+• Converted Figma mockups into responsive pages.
+• Integrated GraphQL APIs and improved Lighthouse performance score from 62 to 91.
+
+Intern, Creative Pixels (Feb 2022 - Jul 2022)
+• Designed landing pages and edited images in Photoshop.
+
+Projects
+E-commerce storefront with Next.js and Stripe checkout.
+
+Education
+BS Information Technology, University of Karachi, 2022

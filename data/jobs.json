@@ -1,0 +1,122 @@
+[
+  {
+    "job_id": "J001", "title": "Machine Learning Engineer", "company": "NovaMind Analytics", "category": "Data Science", "location": "Karachi (Hybrid)",
+    "description": "About the role:\nWe are looking for a Machine Learning Engineer to design, train and deploy predictive models used by millions of users.\nResponsibilities:\n- Build end-to-end ML pipelines from data collection to model deployment.\n- Perform feature engineering and model evaluation on large datasets.\n- Collaborate with product teams to turn business problems into ML solutions.\nRequirements:\n- 2+ years of experience in machine learning.\n- Strong Python skills with Scikit-learn, Pandas and NumPy.\n- Experience with deep learning frameworks such as PyTorch or TensorFlow.\n- Solid understanding of statistics and data structures and algorithms.\n- Experience with SQL and Git.\nNice to have:\n- MLOps experience with MLflow, Docker or Kubernetes.\n- Cloud experience on AWS or Google Cloud."
+  },
+  {
+    "job_id": "J002", "title": "NLP Engineer", "company": "LinguaTech Labs", "category": "Data Science", "location": "Lahore",
+    "description": "Responsibilities:\n- Develop text classification, named entity recognition and semantic search systems.\n- Fine-tune Transformer models (BERT, sentence transformers) for domain-specific language tasks.\n- Build retrieval augmented generation (RAG) pipelines using large language models.\nRequirements:\n- Strong background in natural language processing and deep learning.\n- Hands-on experience with Hugging Face Transformers, spaCy or NLTK.\n- Proficiency in Python and PyTorch.\n- 1+ years of experience building NLP applications.\nPreferred:\n- Experience with vector databases, FastAPI and Docker.\n- Publications or Kaggle competitions in text mining."
+  },
+  {
+    "job_id": "J003", "title": "Data Analyst", "company": "BrightPath Retail", "category": "Data Science", "location": "Islamabad",
+    "description": "We need a Data Analyst who turns raw sales data into clear business insights.\nKey Responsibilities:\n- Clean, transform and analyse data from multiple sources.\n- Build interactive dashboards and reports for management.\n- Perform exploratory data analysis and present findings to stakeholders.\nRequirements:\n- Advanced SQL and Excel (pivot tables, VLOOKUP).\n- Experience with Power BI or Tableau.\n- Good knowledge of statistics.\n- Strong communication skills.\nGood to have:\n- Python (Pandas) for data analysis.\n- Google Analytics experience."
+  },
+  {
+    "job_id": "J004", "title": "Computer Vision Engineer", "company": "VisionGrid AI", "category": "Data Science", "location": "Remote",
+    "description": "Responsibilities:\n- Develop object detection and image classification models for retail shelf monitoring.\n- Optimise models for edge devices.\nRequirements:\n- Experience in computer vision with OpenCV.\n- Deep learning with PyTorch or TensorFlow; experience training CNNs.\n- Strong Python and C++ skills.\n- 2+ years of relevant experience.\nPreferred:\n- Experience with Docker and model deployment on embedded systems (Raspberry Pi, Jetson)."
+  },
+  {
+    "job_id": "J005", "title": "Python Backend Developer", "company": "CloudNest Solutions", "category": "Python Developer", "location": "Karachi",
+    "description": "About the role:\nJoin our backend team to build scalable REST APIs for a SaaS platform.\nResponsibilities:\n- Design and implement RESTful services using Django and FastAPI.\n- Write unit tests and participate in code reviews.\n- Optimise PostgreSQL queries and caching with Redis.\nRequirements:\n- 2+ years of professional Python development.\n- Experience with Django or Flask.\n- Strong knowledge of PostgreSQL and SQL.\n- Familiarity with Git and Linux.\nNice to have:\n- Docker, Celery, AWS.\n- Experience with microservices and message queues (RabbitMQ)."
+  },
+  {
+    "job_id": "J006", "title": "Junior Python Developer", "company": "Codeweave", "category": "Python Developer", "location": "Lahore",
+    "description": "We are hiring fresh graduates who love Python.\nResponsibilities:\n- Write clean, maintainable Python code for internal automation tools.\n- Build small web services with Flask.\n- Write scripts to process CSV and Excel files.\nRequirements:\n- Bachelor's degree in Computer Science or related field.\n- Good understanding of Python and object-oriented programming.\n- Basic knowledge of SQL and Git.\n- Problem solving skills and willingness to learn.\nBonus:\n- Knowledge of Pandas, REST APIs or Linux shell scripting."
+  },
+  {
+    "job_id": "J007", "title": "Java Backend Engineer", "company": "FinEdge Systems", "category": "Java Developer", "location": "Islamabad",
+    "description": "Responsibilities:\n- Develop and maintain microservices for core banking using Spring Boot.\n- Design REST APIs and integrate with third-party payment gateways.\n- Write unit tests with JUnit.\nRequirements:\n- 3+ years of experience with Java (Java 11 or later) and Spring Boot.\n- Strong understanding of OOP, design patterns and data structures.\n- Experience with Oracle or MySQL databases.\n- Familiarity with Git and CI/CD pipelines (Jenkins).\nPreferred:\n- Kafka, Docker, Kubernetes.\n- Experience in the banking or fintech domain."
+  },
+  {
+    "job_id": "J008", "title": "Android Developer", "company": "AppVerse Studio", "category": "Java Developer", "location": "Karachi",
+    "description": "Responsibilities:\n- Build and maintain native Android applications.\n- Integrate REST APIs and Firebase services.\nRequirements:\n- 1+ years of Android development experience.\n- Proficiency in Kotlin and Java.\n- Understanding of MVVM architecture.\n- Experience with Git.\nNice to have:\n- Flutter or React Native experience.\n- Published apps on the Play Store."
+  },
+  {
+    "job_id": "J009", "title": ".NET Developer", "company": "Meridian Software House", "category": "DotNet Developer", "location": "Lahore",
+    "description": "Responsibilities:\n- Develop enterprise web applications with ASP.NET Core and C#.\n- Build Web APIs and integrate with Angular frontends.\n- Write optimised T-SQL queries and stored procedures in SQL Server.\nRequirements:\n- 2+ years of experience with C#, .NET Core and Entity Framework.\n- Experience with SQL Server.\n- Understanding of OOP, SOLID principles and design patterns.\n- Experience with Git.\nPreferred:\n- Angular or React experience.\n- Azure DevOps, Docker, and microservices.\n- Unit testing with xUnit or NUnit."
+  },
+  {
+    "job_id": "J010", "title": "Full Stack Developer (.NET / Angular)", "company": "Orbit Digital", "category": "DotNet Developer", "location": "Karachi (Hybrid)",
+    "description": "About the role:\nWe need a full stack engineer comfortable on both sides of the stack.\nResponsibilities:\n- Build responsive SPAs with Angular, TypeScript and RxJS.\n- Develop backend services in ASP.NET Core Web API.\n- Implement authentication with JWT and OAuth.\nRequirements:\n- 2+ years of experience with Angular and TypeScript.\n- Experience with C# and .NET.\n- SQL Server or PostgreSQL.\n- HTML, CSS, Bootstrap.\nNice to have:\n- SignalR, Redis, Azure.\n- Experience with CI/CD."
+  },
+  {
+    "job_id": "J011", "title": "Frontend Developer (React)", "company": "Pixelcraft", "category": "Web Designing", "location": "Remote",
+    "description": "Responsibilities:\n- Build pixel-perfect, responsive user interfaces from Figma designs.\n- Develop reusable components with React and Redux.\n- Integrate REST and GraphQL APIs.\nRequirements:\n- 1+ years of experience with React.js and JavaScript (ES6+).\n- Strong HTML5, CSS3 and responsive design.\n- Experience with Git.\nPreferred:\n- TypeScript, Next.js, Tailwind CSS.\n- Unit testing with Jest."
+  },
+  {
+    "job_id": "J012", "title": "UI/UX Designer", "company": "Pixelcraft", "category": "Web Designing", "location": "Lahore",
+    "description": "Responsibilities:\n- Conduct user research and create wireframes, prototypes and high-fidelity designs.\n- Run usability testing sessions and iterate on feedback.\n- Maintain the design system.\nRequirements:\n- Portfolio demonstrating UX design and visual design skills.\n- Proficiency in Figma or Adobe XD.\n- Knowledge of Adobe Photoshop and Illustrator.\n- Strong communication and teamwork.\nNice to have:\n- Basic HTML and CSS."
+  },
+  {
+    "job_id": "J013", "title": "WordPress / Web Designer", "company": "Sitesmith", "category": "Web Designing", "location": "Karachi",
+    "description": "We are looking for a creative web designer.\nResponsibilities:\n- Design and develop websites for small businesses.\n- Customise themes and ensure SEO best practices.\nRequirements:\n- Strong HTML, CSS, JavaScript and jQuery.\n- PHP and MySQL basics.\n- Graphic design skills with Photoshop.\nGood to have:\n- Bootstrap and SEO knowledge."
+  },
+  {
+    "job_id": "J014", "title": "DevOps Engineer", "company": "Stackline Cloud", "category": "DevOps Engineer", "location": "Islamabad",
+    "description": "Responsibilities:\n- Build and maintain CI/CD pipelines with Jenkins and GitHub Actions.\n- Manage containerised workloads on Kubernetes.\n- Provision infrastructure as code with Terraform.\n- Set up monitoring with Prometheus and Grafana.\nRequirements:\n- 3+ years of experience in DevOps or SRE roles.\n- Strong Linux administration and Bash scripting.\n- Hands-on with Docker and Kubernetes.\n- Experience with AWS or Azure.\nPreferred:\n- Ansible, Python scripting, Nginx."
+  },
+  {
+    "job_id": "J015", "title": "Cloud Engineer (Azure)", "company": "SkyBridge IT", "category": "DevOps Engineer", "location": "Remote",
+    "description": "Responsibilities:\n- Design and operate cloud infrastructure on Microsoft Azure.\n- Automate deployments with Azure DevOps pipelines and PowerShell.\nRequirements:\n- 2+ years of Azure experience.\n- Experience with Windows Server, Active Directory and networking.\n- Infrastructure as code (Terraform or ARM).\nNice to have:\n- AZ-104 certification, Docker, Kubernetes."
+  },
+  {
+    "job_id": "J016", "title": "Database Administrator", "company": "DataVault Corp", "category": "Database", "location": "Karachi",
+    "description": "Responsibilities:\n- Administer, tune and back up production databases.\n- Write and optimise complex queries and stored procedures.\n- Ensure high availability and disaster recovery.\nRequirements:\n- 3+ years of experience as DBA with SQL Server or Oracle.\n- Strong SQL, PL/SQL and database design skills.\n- Experience with Linux.\nPreferred:\n- PostgreSQL, MongoDB.\n- Experience with cloud databases on AWS or Azure."
+  },
+  {
+    "job_id": "J017", "title": "Data Engineer", "company": "StreamFlow Analytics", "category": "ETL Developer", "location": "Lahore (Hybrid)",
+    "description": "Responsibilities:\n- Build reliable ETL/ELT data pipelines that ingest data from APIs and databases.\n- Model data in the data warehouse for analytics.\n- Orchestrate workflows with Apache Airflow.\nRequirements:\n- 2+ years of experience in data engineering.\n- Strong Python and SQL.\n- Experience with Apache Spark (PySpark).\n- Data warehousing concepts (Snowflake, Redshift or BigQuery).\nNice to have:\n- Kafka, Docker, dbt.\n- AWS experience."
+  },
+  {
+    "job_id": "J018", "title": "ETL Developer", "company": "InfoBridge", "category": "ETL Developer", "location": "Islamabad",
+    "description": "Responsibilities:\n- Develop and maintain ETL processes using SSIS and Informatica.\n- Data integration from multiple source systems into the enterprise data warehouse.\nRequirements:\n- Strong SQL and T-SQL.\n- Experience with SQL Server and Oracle.\n- Understanding of dimensional modeling and data warehousing.\nPreferred:\n- Power BI reporting, Python scripting."
+  },
+  {
+    "job_id": "J019", "title": "Big Data Engineer (Hadoop)", "company": "PetaScale Systems", "category": "Hadoop", "location": "Karachi",
+    "description": "Responsibilities:\n- Process large-scale datasets on the Hadoop ecosystem.\n- Write Spark jobs in Scala and Python.\nRequirements:\n- Experience with Hadoop, HDFS, Hive and MapReduce.\n- Apache Spark and Kafka.\n- Scala or Java.\n- Linux and shell scripting.\nPreferred:\n- Cloud data platforms (AWS EMR, Google Cloud Dataproc)."
+  },
+  {
+    "job_id": "J020", "title": "QA Automation Engineer", "company": "QualityFirst", "category": "Automation Testing", "location": "Lahore",
+    "description": "Responsibilities:\n- Design and maintain automated test suites for web and mobile apps.\n- Integrate tests into CI/CD.\nRequirements:\n- 2+ years of test automation experience with Selenium or Cypress.\n- Programming in Java, Python or JavaScript.\n- API testing with Postman.\n- Understanding of Agile/Scrum.\nNice to have:\n- Appium, JMeter performance testing, Playwright."
+  },
+  {
+    "job_id": "J021", "title": "Software QA Engineer (Manual)", "company": "QualityFirst", "category": "Testing", "location": "Karachi",
+    "description": "Responsibilities:\n- Write and execute test cases, perform functional and regression testing.\n- Log and track defects in Jira.\nRequirements:\n- 1+ years of manual testing experience.\n- Knowledge of SDLC, STLC and Agile.\n- Basic SQL.\n- Good communication skills.\nBonus:\n- Exposure to automation testing and API testing."
+  },
+  {
+    "job_id": "J022", "title": "Network Security Engineer", "company": "SecureLayer", "category": "Network Security Engineer", "location": "Islamabad",
+    "description": "Responsibilities:\n- Configure and monitor firewalls, VPNs and intrusion detection systems.\n- Perform vulnerability assessments and respond to incidents.\nRequirements:\n- 2+ years of network security experience.\n- Strong networking fundamentals (TCP/IP, routing, switching); CCNA.\n- Experience with SIEM tools such as Splunk or QRadar.\n- Linux.\nPreferred:\n- Penetration testing experience, CEH or OSCP certification.\n- Python scripting."
+  },
+  {
+    "job_id": "J023", "title": "Blockchain Developer", "company": "ChainForge", "category": "Blockchain", "location": "Remote",
+    "description": "Responsibilities:\n- Develop and audit smart contracts on Ethereum.\n- Build web3 frontends that interact with contracts.\nRequirements:\n- Experience with Solidity and smart contracts.\n- JavaScript/TypeScript and Node.js.\n- Understanding of cryptography and blockchain fundamentals.\nPreferred:\n- React, Rust, security auditing experience."
+  },
+  {
+    "job_id": "J024", "title": "SAP FICO Consultant", "company": "Enterprise Partners", "category": "SAP Developer", "location": "Karachi",
+    "description": "Responsibilities:\n- Configure and support SAP FI/CO modules.\n- Gather business requirements and map them to SAP processes.\nRequirements:\n- 3+ years of SAP FICO implementation experience.\n- Strong understanding of accounting, general ledger and financial reporting.\n- Business analysis and stakeholder management.\nPreferred:\n- SAP S/4HANA certification."
+  },
+  {
+    "job_id": "J025", "title": "Business Analyst", "company": "Insight Consulting", "category": "Business Analyst", "location": "Lahore",
+    "description": "Responsibilities:\n- Elicit and document business requirements and user stories.\n- Work with development teams in an Agile environment.\n- Analyse data to support decisions and present to stakeholders.\nRequirements:\n- 2+ years as a business analyst.\n- Requirements gathering, process modelling and BRD writing.\n- SQL and Excel.\n- Jira and Confluence.\n- Excellent communication skills.\nNice to have:\n- Power BI or Tableau."
+  },
+  {
+    "job_id": "J026", "title": "Project Manager (IT)", "company": "Insight Consulting", "category": "PMO", "location": "Islamabad",
+    "description": "Responsibilities:\n- Plan, execute and deliver software projects on time and within budget.\n- Run sprint planning, stand-ups and retrospectives.\n- Manage risks, scope and stakeholder communication.\nRequirements:\n- 4+ years of project management experience in IT.\n- Agile/Scrum and Kanban.\n- Jira, MS Project.\n- Leadership and stakeholder management.\nPreferred:\n- PMP or PSM certification."
+  },
+  {
+    "job_id": "J027", "title": "HR Executive", "company": "PeopleFirst Group", "category": "HR", "location": "Karachi",
+    "description": "Responsibilities:\n- Manage end-to-end recruitment and onboarding.\n- Maintain employee records and handle payroll coordination.\n- Handle employee relations and engagement activities.\nRequirements:\n- Bachelor's or Master's in HR or Business Administration.\n- 1+ years in human resources or talent acquisition.\n- MS Excel and HRMS.\n- Strong communication skills.\nNice to have:\n- Knowledge of labour law."
+  },
+  {
+    "job_id": "J028", "title": "Sales Executive (B2B)", "company": "TradeLink", "category": "Sales", "location": "Lahore",
+    "description": "Responsibilities:\n- Generate leads, meet clients and close B2B deals.\n- Maintain the sales pipeline in CRM.\nRequirements:\n- 1+ years of sales or business development experience.\n- Excellent communication and negotiation skills.\n- Excel.\nPreferred:\n- Salesforce experience."
+  },
+  {
+    "job_id": "J029", "title": "Digital Marketing Specialist", "company": "BrandHive", "category": "Sales", "location": "Remote",
+    "description": "Responsibilities:\n- Plan and run social media marketing and email marketing campaigns.\n- Improve organic traffic through SEO.\n- Track performance in Google Analytics.\nRequirements:\n- 1+ years of digital marketing experience.\n- SEO/SEM and content marketing.\n- Google Analytics.\nNice to have:\n- Graphic design with Photoshop or Canva."
+  },
+  {
+    "job_id": "J030", "title": "Operations Manager", "company": "Swift Logistics", "category": "Operations Manager", "location": "Karachi",
+    "description": "Responsibilities:\n- Oversee daily warehouse and logistics operations.\n- Optimise inventory management and procurement processes.\n- Lead a team of supervisors.\nRequirements:\n- 5+ years in operations or supply chain management.\n- Leadership and problem solving.\n- ERP systems and Excel.\nPreferred:\n- SAP MM, Lean / Six Sigma certification."
+  }
+]
