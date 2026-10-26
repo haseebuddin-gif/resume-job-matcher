@@ -1,4 +1,4 @@
-# Evaluation results (2026-10-26 09:24)
+# Evaluation results (2026-10-26 09:52)
 
 Model: `sentence-transformers/all-MiniLM-L6-v2` | Jobs: 30 | Dataset: hand-labelled sample (8 resumes)
 
@@ -9,6 +9,13 @@ Model: `sentence-transformers/all-MiniLM-L6-v2` | Jobs: 30 | Dataset: hand-label
 | Micro | 0.990 | 0.933 | 0.961 |
 | Macro | 0.993 | 0.941 | 0.966 |
 
+### Ablation: semantic skill inference (micro-averaged)
+
+| Extractor | Precision | Recall | F1 |
+|---|---|---|---|
+| Dictionary (PhraseMatcher) | 0.990 | 0.933 | 0.961 |
+| Dictionary + semantic inference | 0.980 | 0.933 | 0.956 |
+
 ## Job ranking
 
 Queries (resumes): 8
@@ -17,4 +24,20 @@ Queries (resumes): 8
 |---|---|---|---|---|---|---|---|---|---|---|
 | TF-IDF + Cosine (baseline) | 1.000 | 1.000 | 0.542 | 1.000 | 0.625 | 0.938 | 0.952 | 0.400 | 1.000 | 0.985 |
 | SBERT + Cosine (proposed) | 1.000 | 1.000 | 0.542 | 1.000 | 0.625 | 0.938 | 0.952 | 0.400 | 1.000 | 0.981 |
-| Hybrid: SBERT + Skills + Experience | 1.000 | 1.000 | 0.542 | 1.000 | 0.667 | 1.000 | 0.990 | 0.400 | 1.000 | 0.990 |
+| Hybrid: SBERT + Skills + Experience + Education | 1.000 | 1.000 | 0.542 | 1.000 | 0.667 | 1.000 | 0.990 | 0.400 | 1.000 | 0.990 |
+
+### Ranking with `sentence-transformers/all-MiniLM-L6-v2`
+
+| Method | MRR | P@1 | Recall@1 | nDCG@1 | P@3 | Recall@3 | nDCG@3 | P@5 | Recall@5 | nDCG@5 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| TF-IDF + Cosine (baseline) | 1.000 | 1.000 | 0.542 | 1.000 | 0.625 | 0.938 | 0.952 | 0.400 | 1.000 | 0.985 |
+| SBERT + Cosine (proposed) | 1.000 | 1.000 | 0.542 | 1.000 | 0.625 | 0.938 | 0.952 | 0.400 | 1.000 | 0.981 |
+| Hybrid: SBERT + Skills + Experience + Education | 1.000 | 1.000 | 0.542 | 1.000 | 0.667 | 1.000 | 0.990 | 0.400 | 1.000 | 0.990 |
+
+### Ranking with `sentence-transformers/all-mpnet-base-v2`
+
+| Method | MRR | P@1 | Recall@1 | nDCG@1 | P@3 | Recall@3 | nDCG@3 | P@5 | Recall@5 | nDCG@5 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| TF-IDF + Cosine (baseline) | 1.000 | 1.000 | 0.542 | 1.000 | 0.625 | 0.938 | 0.952 | 0.400 | 1.000 | 0.985 |
+| SBERT + Cosine (proposed) | 0.938 | 0.875 | 0.417 | 0.875 | 0.667 | 1.000 | 0.944 | 0.400 | 1.000 | 0.944 |
+| Hybrid: SBERT + Skills + Experience + Education | 1.000 | 1.000 | 0.542 | 1.000 | 0.667 | 1.000 | 1.000 | 0.400 | 1.000 | 1.000 |

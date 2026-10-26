@@ -1,0 +1,189 @@
+<div class="page">
+  <header class="page-head">
+    <div>
+      <h1>Analyze a resume</h1>
+      <p>Upload a resume to rank suitable jobs, see which skills match, and get a personalised skill-gap report.</p>
+    </div>
+  </header>
+
+  @switch (serverState()) {
+    @case ('down') {
+      <div class="callout warn server">
+        <app-icon name="alert" [size]="16" />
+        <div class="spacer">
+          <strong>The analysis server is not reachable.</strong>
+          Start it with <code>uvicorn api.main:app --port 8000</code> from the project folder.
+        </div>
+        <button class="btn btn-sm" (click)="retryServer()"><app-icon name="refresh" [size]="14" />Retry</button>
+      </div>
+    }
+    @case ('warming') {
+      <div class="callout server">
+        <span class="spinner"></span>
+        <div>Loading the language model. The first analysis may take a few extra seconds.</div>
+      </div>
+    }
+  }
+
+  <div class="grid grid-main">
+    <!-- resume input -->
+    <section class="card">
+      <div class="card-head">
+        <h2 class="spacer">Resume</h2>
+        <div class="segmented" role="tablist">
+          <button role="tab" [class.active]="source() === 'upload'" (click)="source.set('upload')"><app-icon name="upload" [size]="14" />Upload</button>
+          <button role="tab" [class.active]="source() === 'sample'" (click)="source.set('sample')"><app-icon name="file" [size]="14" />Samples</button>
+          <button role="tab" [class.active]="source() === 'paste'" (click)="source.set('paste')"><app-icon name="clipboard" [size]="14" />Paste</button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        @switch (source()) {
+          @case ('upload') {
+            @if (file(); as f) {
+              <div class="file-row">
+                <span class="file-icon"><app-icon name="file" [size]="20" /></span>
+                <div class="spacer">
+                  <strong>{{ f.name }}</strong>
+                  <p class="muted small">{{ fileSize(f.size) }} · ready to analyze</p>
+                </div>
+                <button class="btn btn-ghost btn-sm" (click)="file.set(null)"><app-icon name="x" [size]="14" />Remove</button>
+              </div>
+            } @else {
+              <label class="dropzone" [class.dragging]="dragging()"
+                     (dragover)="$event.preventDefault(); dragging.set(true)" (dragleave)="dragging.set(false)" (drop)="onDrop($event)">
+                <input type="file" accept=".pdf,.docx,.txt" class="sr-only" (change)="onFileInput($event)" />
+                <span class="drop-icon"><app-icon name="upload" [size]="22" /></span>
+                <strong>Drop your resume here, or <span class="link">browse</span></strong>
+                <span class="muted small">PDF, DOCX or TXT · up to 5 MB · text-based PDFs only (no scans)</span>
+              </label>
+            }
+          }
+          @case ('sample') {
+            <p class="muted small" style="margin-bottom: 12px">Fictional resumes included for demonstration and evaluation.</p>
+            <div class="samples">
+              @for (s of config()?.samples ?? []; track s) {
+                <div class="choice" [class.selected]="sample() === s" (click)="sample.set(s)" role="radio" [attr.aria-checked]="sample() === s" tabindex="0"
+                     (keydown.enter)="sample.set(s)">
+                  <input type="radio" name="sample" [checked]="sample() === s" tabindex="-1" />
+                  <div class="spacer"><strong>{{ sampleLabel(s) }}</strong></div>
+                  <button class="btn btn-ghost btn-sm" (click)="previewSample(s, $event)">Preview</button>
+                </div>
+              } @empty {
+                @for (i of [1, 2, 3, 4]; track i) { <div class="skeleton" style="height: 46px"></div> }
+              }
+            </div>
+          }
+          @case ('paste') {
+            <div class="field">
+              <label for="paste">Resume text</label>
+              <textarea id="paste" class="textarea" rows="14" placeholder="Paste the full text of the resume…"
+                        [ngModel]="pasted()" (ngModelChange)="pasted.set($event)"></textarea>
+              <span class="hint">{{ pastedWords() }} words{{ pastedWords() < 30 ? ' · at least 30 needed' : '' }}</span>
+            </div>
+          }
+        }
+      </div>
+    </section>
+
+    <!-- settings -->
+    <aside class="card settings">
+      <div class="card-head"><h2>Matching settings</h2></div>
+      <div class="card-body stack">
+        <div class="stack" style="gap: 8px" role="radiogroup" aria-label="Ranking method">
+          <span class="label">Ranking method</span>
+          @for (m of methods; track m) {
+            <label class="choice" [class.selected]="method() === m">
+              <input type="radio" name="method" [checked]="method() === m" (change)="method.set(m)" />
+              <div><strong>{{ methodInfo[m].title }}</strong><span>{{ methodInfo[m].text }}</span></div>
+            </label>
+          }
+        </div>
+
+        <div class="field">
+          <label for="model">Sentence Transformer model</label>
+          <select id="model" class="select" [ngModel]="model()" (ngModelChange)="model.set($event)">
+            @for (m of config()?.models ?? []; track m.id) { <option [value]="m.id">{{ m.label }}</option> }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="topk">Jobs to show <span class="muted tnum">· {{ topK() }}</span></label>
+          <input id="topk" type="range" min="3" max="20" step="1" [ngModel]="topK()" (ngModelChange)="topK.set(+$event)" />
+        </div>
+
+        <button class="btn btn-ghost btn-sm advanced-toggle" (click)="showAdvanced.set(!showAdvanced())" [attr.aria-expanded]="showAdvanced()">
+          <app-icon [name]="showAdvanced() ? 'chevron-down' : 'chevron-right'" [size]="14" />Advanced options
+        </button>
+
+        @if (showAdvanced()) {
+          <div class="advanced stack">
+            @if (method() === 'hybrid') {
+              <div class="row"><span class="label spacer">Hybrid score weights</span>
+                <button class="btn btn-ghost btn-sm" (click)="resetWeights()">Reset</button></div>
+              @for (w of weightFields; track w.key) {
+                <div class="weight">
+                  <div class="row"><span class="spacer small">{{ w.label }}</span><span class="small muted tnum">{{ weightShare(w.key) | percent }}</span></div>
+                  <input type="range" min="0" max="1" step="0.05" [attr.aria-label]="w.label"
+                         [ngModel]="weights()[w.key]" (ngModelChange)="setWeight(w.key, +$event)" />
+                </div>
+              }
+              <span class="hint">Weights are normalised, so only their ratio matters.</span>
+            }
+            <label class="switch">
+              <input type="checkbox" [checked]="inferSkills()" (change)="inferSkills.set(!inferSkills())" />
+              <span><strong class="small">Semantic skill inference</strong><br />
+                <span class="hint">Experimental. Detects skills described in other words using embeddings. See the Evaluation page for its effect.</span></span>
+            </label>
+          </div>
+        }
+      </div>
+      <div class="card-foot">
+        <button class="btn btn-primary btn-lg btn-block" [disabled]="!canAnalyze()" (click)="analyze()">
+          Analyze resume <app-icon name="arrow-right" [size]="16" />
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  @if (state.history().length) {
+    <section class="card history">
+      <div class="card-head"><app-icon name="history" /><h2 class="spacer">Recent analyses</h2>
+        <p>Stored only in this browser</p></div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Candidate</th><th>Source</th><th>Best match</th><th class="num">Score</th><th>Date</th><th></th></tr></thead>
+          <tbody>
+            @for (h of state.history(); track h.id) {
+              <tr>
+                <td><strong>{{ h.name }}</strong></td>
+                <td class="text-2">{{ h.source }}</td>
+                <td>{{ h.topJob }}</td>
+                <td class="num">{{ h.topScore | number: '1.2-2' }}</td>
+                <td class="text-2">{{ h.date | date: 'MMM d, HH:mm' }}</td>
+                <td class="num">
+                  <div class="row" style="justify-content: flex-end">
+                    <button class="btn btn-sm" (click)="openHistory(h)">Open</button>
+                    <button class="btn btn-ghost icon-btn" (click)="state.removeHistory(h.id)" aria-label="Remove"><app-icon name="trash" [size]="14" /></button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+</div>
+
+@if (loading()) {
+  <div class="loading-overlay" role="dialog" aria-modal="true" aria-label="Analyzing resume">
+    <div class="dialog loading-card">
+      <div class="dialog-body">
+        <span class="spinner lg"></span>
+        <h2>Analyzing resume</h2>
+        <p class="text-2">Extracting text and skills, computing Sentence-BERT embeddings and ranking every job. This usually takes a few seconds.</p>
+      </div>
+    </div>
+  </div>
+}

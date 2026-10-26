@@ -24,6 +24,29 @@ def get_nlp():
         return spacy.blank("en")
 
 
+@lru_cache(maxsize=1)
+def get_parser_nlp():
+    """spaCy pipeline with the dependency parser (needed for noun chunks)."""
+    import spacy
+    return spacy.load("en_core_web_sm", disable=["ner"])
+
+
+@lru_cache(maxsize=1)
+def protected_terms() -> frozenset[str]:
+    """Words from the skill taxonomy that must not be lemmatised
+    (spaCy turns "data" into "datum" and "pandas" into "panda")."""
+    import json
+    from pathlib import Path
+    path = Path(__file__).resolve().parent.parent / "data" / "skills.json"
+    taxonomy = json.loads(path.read_text(encoding="utf-8"))
+    words = set()
+    for skills in taxonomy.values():
+        for canonical, aliases in skills.items():
+            for phrase in [canonical, *aliases]:
+                words.update(phrase.lower().split())
+    return frozenset(words)
+
+
 def clean_text(text: str) -> str:
     text = text.lower()
     text = _URL_RE.sub(" ", text)
@@ -39,6 +62,7 @@ def preprocess(text: str, lemmatize: bool = True) -> str:
     nlp = get_nlp()
     doc = nlp(cleaned[:1_000_000])
     has_lemmas = lemmatize and nlp.has_pipe("lemmatizer")
+    keep = protected_terms()
     tokens = []
     for tok in doc:
         word = tok.text
@@ -46,7 +70,7 @@ def preprocess(text: str, lemmatize: bool = True) -> str:
             continue
         if word.isdigit():
             continue
-        lemma = tok.lemma_.lower() if has_lemmas and tok.lemma_ else word
+        lemma = tok.lemma_.lower() if has_lemmas and tok.lemma_ and word not in keep else word
         tokens.append(lemma if re.fullmatch(r"[a-z]+", word) else word)
     return " ".join(tokens)
 

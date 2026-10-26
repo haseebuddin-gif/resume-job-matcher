@@ -59,8 +59,8 @@ class SemanticMatcher:
         from sentence_transformers import SentenceTransformer
         self.model_name = model_name
         self.model = SentenceTransformer(model_name, device=device)
-        self.job_embeddings: np.ndarray | None = None
         self._short_cache: dict[str, np.ndarray] = {}
+        self._doc_cache: dict[str, np.ndarray] = {}
 
     # -- encoding -----------------------------------------------------------------
     def encode(self, texts: list[str], batch_size: int = 32) -> np.ndarray:
@@ -73,23 +73,35 @@ class SemanticMatcher:
         return emb / (np.linalg.norm(emb) + 1e-12)
 
     def encode_documents(self, texts: list[str], use_cache: bool = True) -> np.ndarray:
-        key = hashlib.sha1((self.model_name + "\x00".join(texts)).encode("utf-8")).hexdigest()[:16]
-        path = CACHE_DIR / f"{key}.npy"
-        if use_cache and path.exists():
-            return np.load(path)
-        all_chunks, owners = [], []
-        for i, t in enumerate(texts):
-            chunks = chunk_text(t)
-            all_chunks.extend(chunks)
-            owners.extend([i] * len(chunks))
-        chunk_emb = self.encode(all_chunks)
-        owners = np.array(owners)
-        docs = np.vstack([chunk_emb[owners == i].mean(axis=0) for i in range(len(texts))])
-        docs /= np.linalg.norm(docs, axis=1, keepdims=True) + 1e-12
-        if use_cache:
-            CACHE_DIR.mkdir(parents=True, exist_ok=True)
-            np.save(path, docs)
-        return docs
+        """Document embeddings, cached per document (in memory and on disk) so
+        adding one job to a collection only embeds that job."""
+        keys = [hashlib.sha1((self.model_name + "\x00" + t).encode("utf-8")).hexdigest()[:20] for t in texts]
+        todo = []
+        for k, t in zip(keys, texts):
+            if k in self._doc_cache:
+                continue
+            path = CACHE_DIR / f"{k}.npy"
+            if use_cache and path.exists():
+                self._doc_cache[k] = np.load(path)
+            else:
+                todo.append((k, t))
+        if todo:
+            all_chunks, owners = [], []
+            for i, (_, t) in enumerate(todo):
+                chunks = chunk_text(t)
+                all_chunks.extend(chunks)
+                owners.extend([i] * len(chunks))
+            chunk_emb = self.encode(all_chunks)
+            owners = np.array(owners)
+            if use_cache:
+                CACHE_DIR.mkdir(parents=True, exist_ok=True)
+            for i, (k, _) in enumerate(todo):
+                emb = chunk_emb[owners == i].mean(axis=0)
+                emb /= np.linalg.norm(emb) + 1e-12
+                self._doc_cache[k] = emb
+                if use_cache:
+                    np.save(CACHE_DIR / f"{k}.npy", emb)
+        return np.vstack([self._doc_cache[k] for k in keys])
 
     def encode_short(self, phrases: list[str]) -> np.ndarray:
         """Embeddings for short phrases (skill names), memoised."""
@@ -100,12 +112,9 @@ class SemanticMatcher:
         return np.vstack([self._short_cache[p] for p in phrases]) if phrases else np.zeros((0, 1))
 
     # -- matching -----------------------------------------------------------------
-    def fit(self, job_texts: list[str]) -> "SemanticMatcher":
-        self.job_embeddings = self.encode_documents(job_texts)
-        return self
-
-    def score(self, resume_text: str) -> np.ndarray:
-        return self.job_embeddings @ self.encode_document(resume_text)
+    # The matcher holds no job state, so one loaded model can serve several job collections.
+    def score(self, resume_text: str, job_embeddings: np.ndarray) -> np.ndarray:
+        return job_embeddings @ self.encode_document(resume_text)
 
     def explain(self, resume_text: str, job_text: str, top_n: int = 3) -> list[dict]:
         """Explainability: the job requirement sentences that best match resume

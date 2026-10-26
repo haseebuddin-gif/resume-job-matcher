@@ -122,12 +122,15 @@ def recommend_skills(gaps: list[GapResult], job_titles: list[str], category_of: 
             jobs_for[p["job_skill"]].append(title)
             related[p["job_skill"]] = p["candidate_skill"]
     rows = []
-    for skill, score in sorted(priority.items(), key=lambda kv: (-kv[1], kv[0]))[:top_n]:
+    for rank, (skill, score) in enumerate(sorted(priority.items(), key=lambda kv: (-kv[1], kv[0]))[:top_n]):
         category = category_of.get(skill, "Other")
         advice = CATEGORY_ADVICE.get(category, "Learn the basics and apply it in a project.")
         if skill in related:
             advice = f"You already know {related[skill]}, so {skill} should be quick to pick up. " + advice
         rows.append({"Skill": skill, "Category": category, "Priority": score,
                      "Needed by (top jobs)": len(set(jobs_for[skill])),
-                     "Jobs": ", ".join(sorted(set(jobs_for[skill]))), "How to improve": advice})
+                     "Jobs": ", ".join(sorted(set(jobs_for[skill]))), "How to improve": advice,
+                     "Related skill you have": related.get(skill, ""),
+                     # learning roadmap: the 3 highest-priority skills first, then the next 4, then the rest
+                     "Phase": "Focus now" if rank < 3 else "Next" if rank < 7 else "Later"})
     return pd.DataFrame(rows)

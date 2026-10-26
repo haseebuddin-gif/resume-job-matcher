@@ -1,0 +1,8 @@
+.shell-main {
+  margin-left: var(--sidebar);
+  min-height: 100vh;
+}
+
+@media (max-width: 900px) {
+  .shell-main { margin-left: 0; }
+}

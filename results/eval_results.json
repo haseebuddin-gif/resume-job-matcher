@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-26 09:24",
+  "timestamp": "2026-10-26 09:52",
   "model": "sentence-transformers/all-MiniLM-L6-v2",
   "n_jobs": 30,
   "dataset": "hand-labelled sample (8 resumes)",
@@ -10,6 +10,24 @@
     "macro_precision": 0.993421052631579,
     "macro_recall": 0.9406822344322344,
     "macro_f1": 0.9655374159244785
+  },
+  "extraction_ablation": {
+    "Dictionary (PhraseMatcher)": {
+      "micro_precision": 0.98989898989899,
+      "micro_recall": 0.9333333333333333,
+      "micro_f1": 0.9607843137254903,
+      "macro_precision": 0.993421052631579,
+      "macro_recall": 0.9406822344322344,
+      "macro_f1": 0.9655374159244785
+    },
+    "Dictionary + semantic inference": {
+      "micro_precision": 0.98,
+      "micro_recall": 0.9333333333333333,
+      "micro_f1": 0.9560975609756097,
+      "macro_precision": 0.9875,
+      "macro_recall": 0.9406822344322344,
+      "macro_f1": 0.9626528005398631
+    }
   },
   "extraction_per_resume": {
     "data_scientist.txt": {
@@ -98,6 +116,90 @@
       "P@5": 0.4,
       "Recall@5": 1.0,
       "nDCG@5": 0.9899650986435234
+    }
+  },
+  "model_comparison": {
+    "sentence-transformers/all-MiniLM-L6-v2": {
+      "tfidf": {
+        "queries": 8,
+        "MRR": 1.0,
+        "P@1": 1.0,
+        "Recall@1": 0.5416666666666666,
+        "nDCG@1": 1.0,
+        "P@3": 0.625,
+        "Recall@3": 0.9375,
+        "nDCG@3": 0.9516433990956823,
+        "P@5": 0.4,
+        "Recall@5": 1.0,
+        "nDCG@5": 0.9846519144172562
+      },
+      "sbert": {
+        "queries": 8,
+        "MRR": 1.0,
+        "P@1": 1.0,
+        "Recall@1": 0.5416666666666666,
+        "nDCG@1": 1.0,
+        "P@3": 0.625,
+        "Recall@3": 0.9375,
+        "nDCG@3": 0.9516433990956823,
+        "P@5": 0.4,
+        "Recall@5": 1.0,
+        "nDCG@5": 0.9812931131918443
+      },
+      "hybrid": {
+        "queries": 8,
+        "MRR": 1.0,
+        "P@1": 1.0,
+        "Recall@1": 0.5416666666666666,
+        "nDCG@1": 1.0,
+        "P@3": 0.6666666666666666,
+        "Recall@3": 1.0,
+        "nDCG@3": 0.9899650986435234,
+        "P@5": 0.4,
+        "Recall@5": 1.0,
+        "nDCG@5": 0.9899650986435234
+      }
+    },
+    "sentence-transformers/all-mpnet-base-v2": {
+      "tfidf": {
+        "queries": 8,
+        "MRR": 1.0,
+        "P@1": 1.0,
+        "Recall@1": 0.5416666666666666,
+        "nDCG@1": 1.0,
+        "P@3": 0.625,
+        "Recall@3": 0.9375,
+        "nDCG@3": 0.9516433990956823,
+        "P@5": 0.4,
+        "Recall@5": 1.0,
+        "nDCG@5": 0.9846519144172562
+      },
+      "sbert": {
+        "queries": 8,
+        "MRR": 0.9375,
+        "P@1": 0.875,
+        "Recall@1": 0.4166666666666667,
+        "nDCG@1": 0.875,
+        "P@3": 0.6666666666666666,
+        "Recall@3": 1.0,
+        "nDCG@3": 0.9438313178399557,
+        "P@5": 0.4,
+        "Recall@5": 1.0,
+        "nDCG@5": 0.9438313178399557
+      },
+      "hybrid": {
+        "queries": 8,
+        "MRR": 1.0,
+        "P@1": 1.0,
+        "Recall@1": 0.5416666666666666,
+        "nDCG@1": 1.0,
+        "P@3": 0.6666666666666666,
+        "Recall@3": 1.0,
+        "nDCG@3": 1.0,
+        "P@5": 0.4,
+        "Recall@5": 1.0,
+        "nDCG@5": 1.0
+      }
     }
   }
 }

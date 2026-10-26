@@ -8,6 +8,7 @@ lower-cased tokens, so "ReactJS", "react.js" and "React" all map to "React".
 from __future__ import annotations
 
 import json
+import re
 from collections import defaultdict
 from functools import lru_cache
 from pathlib import Path
@@ -60,6 +61,49 @@ class SkillExtractor:
         "SQL Server" does not also count as "SQL", nor "ASP.NET MVC" as "MVC"."""
         from spacy.util import filter_spans
         return filter_spans(self.matcher(self.nlp.make_doc(text), as_spans=True))
+
+    def infer(self, text: str, semantic, exclude: set[str] | None = None,
+              threshold: float = 0.80, max_phrases: int = 400) -> list[dict]:
+        """Semantic skill inference for skills described in other words
+        (e.g. "neural nets" -> Deep Learning, "statistical modelling" -> Statistics).
+
+        Candidate phrases are spaCy noun chunks plus short comma-separated items;
+        each is embedded with the Sentence Transformer and compared with every
+        skill alias. A skill is inferred when the best similarity >= threshold."""
+        import numpy as np
+        from .preprocess import get_parser_nlp
+
+        exclude = exclude or set()
+        phrases: dict[str, None] = {}
+        doc = get_parser_nlp()(text[:100_000])
+        for chunk in doc.noun_chunks:
+            words = [t.text.lower() for t in chunk if not (t.is_stop or t.is_punct or t.like_num)]
+            if 2 <= len(words) <= 4:
+                phrases[" ".join(words)] = None
+        for line in text.splitlines():
+            for piece in re.split(r"[,;|•()/]| and ", line):
+                words = piece.strip(" .:-").lower().split()
+                if 2 <= len(words) <= 4:
+                    phrases[" ".join(words)] = None
+        # Single words are left to the dictionary: on their own they are too ambiguous
+        # for embeddings ("experience" ~ "user experience", "jun" ~ "junit").
+        candidates = [p for p in phrases if len(p) > 2 and not self.matcher(self.nlp.make_doc(p))][:max_phrases]
+        if not candidates:
+            return []
+
+        alias_list = [(canonical, alias) for canonical, aliases in self.aliases.items()
+                      for alias in aliases if len(alias) > 3]
+        sims = semantic.encode_short(candidates) @ semantic.encode_short([a for _, a in alias_list]).T
+        best: dict[str, dict] = {}
+        for i, phrase in enumerate(candidates):
+            j = int(np.argmax(sims[i]))
+            score = float(sims[i, j])
+            canonical = alias_list[j][0]
+            if score >= threshold and canonical not in exclude:
+                if canonical not in best or score > best[canonical]["similarity"]:
+                    best[canonical] = {"skill": canonical, "evidence": phrase, "similarity": round(score, 3),
+                                       "category": self.category_of[canonical]}
+        return sorted(best.values(), key=lambda d: -d["similarity"])
 
     def group_by_category(self, skills: list[str]) -> dict[str, list[str]]:
         grouped: dict[str, list[str]] = defaultdict(list)

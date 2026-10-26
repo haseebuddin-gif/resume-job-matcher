@@ -1,0 +1,297 @@
+@if (r(); as r) {
+  <div class="page">
+    <header class="page-head no-print">
+      <div>
+        <h1>{{ r.profile.name || 'Analysis results' }}</h1>
+        <p>{{ r.settings.source }} · ranked by {{ methodLabel[r.settings.method] }} · <code>{{ modelName(r.settings.model) }}</code></p>
+      </div>
+      <div class="row wrap">
+        <button class="btn" (click)="showSource()"><app-icon name="file" [size]="15" />Extracted text</button>
+        <button class="btn" (click)="print()"><app-icon name="printer" [size]="15" />Export PDF</button>
+        <a class="btn btn-primary" routerLink="/analyze"><app-icon name="upload" [size]="15" />New analysis</a>
+      </div>
+    </header>
+
+    <!-- KPIs -->
+    <section class="kpis screen-only">
+      <div class="card kpi best">
+        <span class="k-label">Best match</span>
+        @if (best(); as b) {
+          <div class="row" style="gap: 12px">
+            <app-score-ring [value]="b.scores.hybrid" [size]="48" />
+            <div style="min-width: 0">
+              <strong class="ellipsis">{{ b.title }}</strong>
+              <span class="badge" [class]="band(b.scores.hybrid).cls">{{ band(b.scores.hybrid).label }}</span>
+            </div>
+          </div>
+        }
+      </div>
+      <button class="card kpi clickable" (click)="openQuality()">
+        <span class="k-label">Resume quality</span>
+        <strong class="k-val tnum">{{ r.quality.score }}<small>/100</small></strong>
+        <span class="k-sub">{{ r.quality.grade }} · view checks <app-icon name="arrow-right" [size]="12" /></span>
+      </button>
+      <div class="card kpi">
+        <span class="k-label">Skills detected</span>
+        <strong class="k-val tnum">{{ skillCount() }}</strong>
+        <span class="k-sub">in {{ categoryCount() }} categories</span>
+      </div>
+      <div class="card kpi">
+        <span class="k-label">Experience</span>
+        <strong class="k-val tnum">{{ r.profile.experience_years }}<small> yrs</small></strong>
+        <span class="k-sub">estimated from dates</span>
+      </div>
+      <div class="card kpi">
+        <span class="k-label">Education</span>
+        <strong class="k-val sm">{{ r.profile.highest_degree || 'Not detected' }}</strong>
+        <span class="k-sub">highest degree found</span>
+      </div>
+    </section>
+
+    <nav class="tabs screen-only" role="tablist">
+      <button role="tab" [class.active]="tab() === 'matches'" (click)="tab.set('matches')">Job matches <span class="count">{{ r.matches.length }}</span></button>
+      <button role="tab" [class.active]="tab() === 'gap'" (click)="tab.set('gap')">Skill gap & roadmap <span class="count">{{ r.recommendations.length }}</span></button>
+      <button role="tab" [class.active]="tab() === 'profile'" (click)="tab.set('profile')">Candidate profile</button>
+      <button role="tab" [class.active]="tab() === 'compare'" (click)="tab.set('compare')">TF-IDF vs SBERT</button>
+    </nav>
+
+    <div class="screen-only">
+      @switch (tab()) {
+        <!-- ============================================================ matches -->
+        @case ('matches') {
+          <div class="matches">
+            @for (m of r.matches; track m.job_id) {
+              <article class="card match" (click)="openMatch(m)" (keydown.enter)="openMatch(m)" tabindex="0">
+                <span class="rank tnum">{{ m.rank }}</span>
+                <div class="m-main">
+                  <div class="row wrap" style="gap: 8px">
+                    <h3>{{ m.title }}</h3>
+                    @if (m.category) { <span class="badge">{{ m.category }}</span> }
+                  </div>
+                  <p class="m-meta">{{ m.company }}@if (m.location) { · {{ m.location }} }</p>
+                  <div class="chips">
+                    @for (s of m.gap.matched_required.slice(0, 6); track s) { <span class="chip good">{{ s }}</span> }
+                    @for (s of m.gap.missing_required.slice(0, 4); track s) { <span class="chip bad">{{ s }}</span> }
+                    @if (m.gap.matched_required.length + m.gap.missing_required.length > 10) {
+                      <span class="chip outline">+{{ m.gap.matched_required.length + m.gap.missing_required.length - 10 }}</span>
+                    }
+                  </div>
+                </div>
+                <div class="m-scores">
+                  <dl>
+                    <div><dt>Semantic</dt><dd class="tnum">{{ m.scores.semantic | percent }}</dd></div>
+                    <div><dt>Skills</dt><dd class="tnum">{{ m.scores.skill === null ? 'n/a' : (m.scores.skill | percent) }}</dd></div>
+                    <div><dt>TF-IDF</dt><dd class="tnum">{{ m.scores.tfidf | number: '1.2-2' }}</dd></div>
+                  </dl>
+                </div>
+                <div class="m-ring">
+                  @if (r.settings.method === 'hybrid') {
+                    <app-score-ring [value]="m.scores.hybrid" [size]="54" label="match" />
+                  } @else {
+                    <strong class="tnum cos">{{ m.scores.match | number: '1.3-3' }}</strong><span class="muted small">cosine</span>
+                  }
+                </div>
+                <app-icon name="chevron-right" class="chev" />
+              </article>
+            }
+          </div>
+          <p class="hint" style="margin-top: 12px">Click a job for the score breakdown, sentence-level evidence and full skill gap.</p>
+        }
+
+        <!-- ============================================================ gap -->
+        @case ('gap') {
+          @if (r.recommendations.length) {
+            <p class="text-2" style="margin-bottom: 16px; max-width: 760px">
+              Skills missing across your top {{ r.matches.length }} jobs, ordered by priority
+              (2 points for each job that requires the skill, 1 for each job that prefers it, halved when you already know a related skill).
+            </p>
+            <div class="roadmap">
+              @for (col of roadmap(); track col.phase) {
+                <section class="phase">
+                  <header><span class="phase-dot" [class]="col.phase === 'Focus now' ? 'p1' : col.phase === 'Next' ? 'p2' : 'p3'"></span>
+                    <h3>{{ col.phase }}</h3><span class="muted small">{{ col.items.length }}</span></header>
+                  @for (rec of col.items; track rec.skill) {
+                    <div class="card rec">
+                      <div class="row"><strong class="spacer">{{ rec.skill }}</strong><span class="badge">{{ rec.category }}</span></div>
+                      <div class="meter" style="margin: 10px 0 6px"><div [style.width.%]="rec.priority / maxPriority() * 100"></div></div>
+                      <p class="small muted">Priority {{ rec.priority }} · needed by {{ rec.needed_by }} of your top jobs</p>
+                      @if (rec.related_to) { <p class="small related">You know <strong>{{ rec.related_to }}</strong>, a related skill.</p> }
+                      <p class="small text-2 advice">{{ rec.advice }}</p>
+                      <details><summary class="small">Jobs that need it</summary><p class="small text-2">{{ rec.jobs.join(', ') }}</p></details>
+                    </div>
+                  } @empty { <p class="muted small empty-col">Nothing here</p> }
+                </section>
+              }
+            </div>
+          } @else {
+            <div class="card empty"><div class="icon-wrap"><app-icon name="check" [size]="22" /></div>
+              <h2>No skill gaps in your top jobs</h2><p>Your resume covers every skill these jobs list.</p></div>
+          }
+
+          <section class="card" style="margin-top: 24px">
+            <div class="card-head">
+              <h2 class="spacer">Gap report for one job</h2>
+              <select class="select" style="width: auto; max-width: 320px" [value]="gapJob()?.job_id" (change)="gapJobId.set($any($event.target).value)">
+                @for (m of r.matches; track m.job_id) { <option [value]="m.job_id">{{ m.rank }}. {{ m.title }} — {{ m.company }}</option> }
+              </select>
+            </div>
+            @if (gapJob(); as g) {
+              <div class="card-body"><app-gap-view [gap]="g.gap" /></div>
+              <div class="card-foot"><button class="btn btn-sm" (click)="openMatch(g)">Open full details</button></div>
+            }
+          </section>
+        }
+
+        <!-- ============================================================ profile -->
+        @case ('profile') {
+          <div class="grid grid-main">
+            <div class="stack" style="gap: 16px">
+              <section class="card">
+                <div class="card-head"><h2>Skills by category</h2></div>
+                <div class="card-body cat-list">
+                  @for (cat of r.profile.skills_by_category | keyvalue; track cat.key) {
+                    <div class="cat"><span class="cat-name">{{ cat.key }}</span>
+                      <div class="chips">@for (s of cat.value; track s) { <span class="chip accent">{{ s }}</span> }</div></div>
+                  } @empty { <p class="muted">No skills recognised.</p> }
+                </div>
+              </section>
+              @if (r.profile.inferred_skills.length) {
+                <section class="card">
+                  <div class="card-head"><h2 class="spacer">Inferred skills</h2><span class="badge warn">experimental</span></div>
+                  <div class="table-wrap">
+                    <table class="table">
+                      <thead><tr><th>Skill</th><th>Resume phrase</th><th class="num">Similarity</th></tr></thead>
+                      <tbody>@for (s of r.profile.inferred_skills; track s.skill) {
+                        <tr><td><strong>{{ s.skill }}</strong></td><td class="text-2">“{{ s.evidence }}”</td><td class="num">{{ s.similarity | number: '1.2-2' }}</td></tr>
+                      }</tbody>
+                    </table>
+                  </div>
+                </section>
+              }
+              <section class="card">
+                <div class="card-head"><h2>Detected resume sections</h2></div>
+                <div class="card-body sections">
+                  @for (s of sections(); track s[0]) {
+                    <details><summary>{{ s[0] | titlecase }}</summary><pre>{{ s[1] }}</pre></details>
+                  } @empty { <p class="muted">No section headings were recognised.</p> }
+                </div>
+              </section>
+            </div>
+            <div class="stack" style="gap: 16px">
+              <section class="card">
+                <div class="card-head"><h2>Contact</h2></div>
+                <dl class="card-body kv">
+                  <dt>Name</dt><dd>{{ r.profile.name || '—' }}</dd>
+                  <dt>Email</dt><dd>{{ r.profile.email || '—' }}</dd>
+                  <dt>Phone</dt><dd>{{ r.profile.phone || '—' }}</dd>
+                  <dt>Links</dt><dd>@for (l of r.profile.links; track l) { <div>{{ l }}</div> } @empty { — }</dd>
+                </dl>
+              </section>
+              <section class="card">
+                <div class="card-head"><h2>Education</h2></div>
+                <div class="card-body stack" style="gap: 10px">
+                  @for (e of r.profile.education; track $index) {
+                    <div class="edu"><app-icon name="graduation" [size]="18" /><div><strong>{{ e.degree }}</strong>
+                      <p class="small text-2">{{ e.details }}</p></div></div>
+                  } @empty { <p class="muted">No education entries detected.</p> }
+                </div>
+              </section>
+            </div>
+          </div>
+        }
+
+        <!-- ============================================================ compare -->
+        @case ('compare') {
+          <div class="grid grid-3 compare-kpis">
+            <div class="card kpi"><span class="k-label">Spearman rank correlation</span>
+              <strong class="k-val tnum">{{ r.comparison.spearman === null ? 'n/a' : (r.comparison.spearman | number: '1.2-2') }}</strong>
+              <span class="k-sub">1.00 means TF-IDF and SBERT rank jobs identically</span></div>
+            <div class="card kpi"><span class="k-label">TF-IDF top job</span>
+              <strong class="k-val sm">{{ topBy('tfidf_rank') }}</strong></div>
+            <div class="card kpi"><span class="k-label">SBERT top job</span>
+              <strong class="k-val sm">{{ topBy('sbert_rank') }}</strong></div>
+          </div>
+          <section class="card">
+            <div class="card-head">
+              <h2 class="spacer">Rank of every job under each method</h2>
+              <div class="segmented">
+                <button [class.active]="sortKey() === 'hybrid_rank'" (click)="sortKey.set('hybrid_rank')">Hybrid</button>
+                <button [class.active]="sortKey() === 'sbert_rank'" (click)="sortKey.set('sbert_rank')">SBERT</button>
+                <button [class.active]="sortKey() === 'tfidf_rank'" (click)="sortKey.set('tfidf_rank')">TF-IDF</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <thead><tr><th>Job</th><th class="num">TF-IDF rank</th><th class="num">SBERT rank</th><th class="num">Hybrid rank</th>
+                  <th class="num">SBERT vs TF-IDF</th><th class="num">TF-IDF</th><th class="num">SBERT</th><th class="num">Hybrid</th></tr></thead>
+                <tbody>
+                  @for (row of compareRows(); track row.job_id) {
+                    <tr>
+                      <td><strong>{{ row.title }}</strong><div class="small muted">{{ row.company }}</div></td>
+                      <td class="num">{{ row.tfidf_rank }}</td>
+                      <td class="num">{{ row.sbert_rank }}</td>
+                      <td class="num">{{ row.hybrid_rank }}</td>
+                      <td class="num">
+                        @let d = rankDelta(row.sbert_rank, row.tfidf_rank);
+                        @if (d > 0) { <span class="delta up"><app-icon name="arrow-up" [size]="12" />{{ d }}</span> }
+                        @else if (d < 0) { <span class="delta down"><app-icon name="arrow-down" [size]="12" />{{ -d }}</span> }
+                        @else { <span class="muted">—</span> }
+                      </td>
+                      <td class="num">{{ row.tfidf_score | number: '1.3-3' }}</td>
+                      <td class="num">{{ row.sbert_score | number: '1.3-3' }}</td>
+                      <td class="num">{{ row.hybrid_score | number: '1.3-3' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            <div class="card-foot" style="justify-content: flex-start"><p class="hint">
+              An up arrow means SBERT ranks the job higher than TF-IDF does, usually because the resume describes related experience in different words.</p></div>
+          </section>
+        }
+      }
+    </div>
+
+    <!-- ============================================================ printable report -->
+    <section class="print-only report">
+      <h1>Resume–job matching report</h1>
+      <p class="text-2">{{ r.profile.name }} · {{ r.profile.email }} · {{ r.settings.source }}</p>
+      <p class="text-2 small">Method: {{ methodLabel[r.settings.method] }} · Model: {{ r.settings.model }}</p>
+
+      <h2>Summary</h2>
+      <p>Resume quality {{ r.quality.score }}/100 ({{ r.quality.grade }}) · {{ skillCount() }} skills · {{ r.profile.experience_years }} years experience ·
+        {{ r.profile.highest_degree || 'degree not detected' }}</p>
+
+      <h2>Top matches</h2>
+      <table class="table">
+        <thead><tr><th>#</th><th>Job</th><th class="num">Match</th><th>Matched skills</th><th>Missing required</th></tr></thead>
+        <tbody>@for (m of r.matches; track m.job_id) {
+          <tr><td>{{ m.rank }}</td><td><strong>{{ m.title }}</strong><br /><span class="small">{{ m.company }}</span></td>
+            <td class="num">{{ m.scores.match | number: '1.2-2' }}</td>
+            <td class="small">{{ m.gap.matched_required.concat(m.gap.matched_preferred).join(', ') || '—' }}</td>
+            <td class="small">{{ m.gap.missing_required.join(', ') || '—' }}</td></tr>
+        }</tbody>
+      </table>
+
+      <h2>Recommended skills</h2>
+      <table class="table">
+        <thead><tr><th>Phase</th><th>Skill</th><th class="num">Priority</th><th>How to improve</th></tr></thead>
+        <tbody>@for (rec of r.recommendations; track rec.skill) {
+          <tr><td>{{ rec.phase }}</td><td><strong>{{ rec.skill }}</strong></td><td class="num">{{ rec.priority }}</td><td class="small">{{ rec.advice }}</td></tr>
+        }</tbody>
+      </table>
+
+      <h2>Resume improvements</h2>
+      <ul>@for (c of r.quality.checks; track c.id) { @if (!c.passed) { <li>{{ c.tip }}</li> } }</ul>
+    </section>
+  </div>
+} @else {
+  <div class="page">
+    <div class="card empty">
+      <div class="icon-wrap"><app-icon name="layers" [size]="22" /></div>
+      <h2>No analysis yet</h2>
+      <p>Analyze a resume to see ranked jobs, skill gaps and recommendations here.</p>
+      <a class="btn btn-primary" routerLink="/analyze" style="margin-top: 16px">Analyze a resume</a>
+    </div>
+  </div>
+}

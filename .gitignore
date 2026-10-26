@@ -4,6 +4,7 @@ __pycache__/
 .cache/
 .streamlit/secrets.toml
 data/external/
+data/custom_jobs.json
 *.csv.zip
 .ipynb_checkpoints/
 .vscode/

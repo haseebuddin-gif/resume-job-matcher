@@ -63,7 +63,12 @@ class ResumeProfile:
     highest_degree: str = ""
     experience_years: float = 0.0
     skills: list[str] = field(default_factory=list)
+    inferred_skills: list[dict] = field(default_factory=list)  # semantic matches: {"skill", "evidence", ...}
     skills_by_category: dict[str, list[str]] = field(default_factory=dict)
+
+    @property
+    def all_skills(self) -> list[str]:
+        return sorted(set(self.skills) | {s["skill"] for s in self.inferred_skills})
 
 
 # --------------------------------------------------------------------------- text extraction
@@ -265,6 +270,19 @@ def split_job_requirements(description: str) -> tuple[str, str]:
         else:
             required.append(stripped)
     return "\n".join(required), "\n".join(preferred)
+
+
+def required_degree(description: str) -> str:
+    """Lowest degree level a job description mentions as a requirement ('' if none)."""
+    found = []
+    for line in description.splitlines():
+        lowered = line.lower()
+        if not re.search(r"degree|graduate|bachelor|master|ph\.?d|bs\b|ms\b|mba|bba", lowered):
+            continue
+        for pattern, degree in DEGREE_PATTERNS:
+            if re.search(pattern, lowered):
+                found.append(degree)
+    return min(found, key=lambda d: DEGREE_RANK[d]) if found else ""
 
 
 def required_experience_years(description: str) -> float:

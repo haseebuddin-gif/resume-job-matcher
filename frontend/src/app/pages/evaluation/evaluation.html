@@ -1,0 +1,124 @@
+<div class="page">
+  <header class="page-head">
+    <div>
+      <h1>Evaluation</h1>
+      <p>Skill extraction is measured with precision, recall and F1. Job ranking is measured with MRR, Precision@K, Recall@K and nDCG@K,
+        comparing the TF-IDF baseline with Sentence-BERT and the hybrid score.</p>
+    </div>
+    <div class="row">
+      <select class="select" style="width: auto" [ngModel]="model()" (ngModelChange)="model.set($event)" aria-label="Model">
+        @for (m of config()?.models ?? []; track m.id) { <option [value]="m.id">{{ m.label }}</option> }
+      </select>
+      <button class="btn btn-primary" (click)="run()" [disabled]="running()">
+        @if (running()) { <span class="spinner"></span> Running… } @else { <app-icon name="play" [size]="14" />Run evaluation }
+      </button>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="skeleton" style="height: 320px"></div>
+  } @else if (result(); as r) {
+    <section class="card">
+      <div class="card-body meta">
+        <span>Dataset <strong>{{ r.dataset }}</strong></span>
+        <span>Jobs <strong>{{ r.n_jobs }}</strong></span>
+        <span>Model <strong><code>{{ modelName(r.model) }}</code></strong></span>
+        <span>Run <strong>{{ r.timestamp }}</strong></span>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>Job ranking: baseline vs proposed</h2></div>
+      <div class="card-body charts">
+        @for (c of charts(); track c.metric) { <app-method-bars [title]="c.metric" [bars]="c.bars" /> }
+      </div>
+      <div class="table-wrap" style="border-top: 1px solid var(--border)">
+        <table class="table">
+          <thead><tr><th>Method</th>@for (k of metricKeys(); track k) { <th class="num">{{ k }}</th> }</tr></thead>
+          <tbody>
+            @for (m of methods; track m.id) {
+              <tr><td><strong>{{ m.long }}</strong></td>
+                @for (k of metricKeys(); track k) {
+                  <td class="num" [class.best]="r.ranking[m.id][k] === best(k)">{{ r.ranking[m.id][k] | number: '1.3-3' }}</td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="card-foot" style="justify-content: flex-start"><p class="hint">Highest value per metric in bold. {{ r.ranking.hybrid['queries'] }} resumes used as queries.</p></div>
+    </section>
+
+    @if (r.model_comparison; as mc) {
+      @for (entry of mc | keyvalue; track entry.key) {
+        <section class="card">
+          <div class="card-head"><h2>Ranking with <code>{{ modelName(entry.key) }}</code></h2></div>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Method</th>@for (k of metricKeys(); track k) { <th class="num">{{ k }}</th> }</tr></thead>
+            <tbody>@for (m of methods; track m.id) {
+              <tr><td>{{ m.long }}</td>@for (k of metricKeys(); track k) {
+                <td class="num" [class.best]="entry.value[m.id][k] === bestIn(entry.value, k)">{{ entry.value[m.id][k] | number: '1.3-3' }}</td> }</tr>
+            }</tbody>
+          </table></div>
+        </section>
+      }
+    }
+
+    @if (r.extraction; as e) {
+      <div class="grid grid-2" style="margin-bottom: 18px">
+        <section class="card" style="margin: 0">
+          <div class="card-head"><h2>Skill extraction</h2></div>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Average</th><th class="num">Precision</th><th class="num">Recall</th><th class="num">F1</th></tr></thead>
+            <tbody>
+              <tr><td>Micro</td><td class="num">{{ e.micro_precision | number: '1.3-3' }}</td><td class="num">{{ e.micro_recall | number: '1.3-3' }}</td><td class="num"><strong>{{ e.micro_f1 | number: '1.3-3' }}</strong></td></tr>
+              <tr><td>Macro</td><td class="num">{{ e.macro_precision | number: '1.3-3' }}</td><td class="num">{{ e.macro_recall | number: '1.3-3' }}</td><td class="num"><strong>{{ e.macro_f1 | number: '1.3-3' }}</strong></td></tr>
+            </tbody>
+          </table></div>
+        </section>
+        @if (r.extraction_ablation; as ab) {
+          <section class="card" style="margin: 0">
+            <div class="card-head"><h2 class="spacer">Ablation: semantic skill inference</h2></div>
+            <div class="table-wrap"><table class="table">
+              <thead><tr><th>Extractor</th><th class="num">P</th><th class="num">R</th><th class="num">F1</th></tr></thead>
+              <tbody>@for (a of ab | keyvalue; track a.key) {
+                <tr><td>{{ a.key }}</td><td class="num">{{ a.value.micro_precision | number: '1.3-3' }}</td>
+                  <td class="num">{{ a.value.micro_recall | number: '1.3-3' }}</td><td class="num">{{ a.value.micro_f1 | number: '1.3-3' }}</td></tr>
+              }</tbody>
+            </table></div>
+            <div class="card-foot" style="justify-content: flex-start"><p class="hint">Micro-averaged. Shows whether embedding-based inference adds correct skills or only noise.</p></div>
+          </section>
+        }
+      </div>
+    }
+
+    @if (r.extraction_per_resume; as per) {
+      <section class="card">
+        <div class="card-head"><h2>Error analysis per resume</h2></div>
+        <div class="table-wrap"><table class="table">
+          <thead><tr><th>Resume</th><th>Missed (false negatives)</th><th>Extra (false positives)</th></tr></thead>
+          <tbody>@for (p of per | keyvalue; track p.key) {
+            <tr><td><code>{{ p.key }}</code></td>
+              <td><div class="chips">@for (s of p.value.missed; track s) { <span class="chip bad">{{ s }}</span> } @empty { <span class="muted">—</span> }</div></td>
+              <td><div class="chips">@for (s of p.value.extra; track s) { <span class="chip warn">{{ s }}</span> } @empty { <span class="muted">—</span> }</div></td></tr>
+          }</tbody>
+        </table></div>
+      </section>
+    }
+
+    <div class="callout">
+      <app-icon name="info" [size]="16" />
+      <div>The built-in set is small (8 hand-labelled resumes, 30 jobs) and demonstrates the method. For stronger evidence, run
+        <code>python evaluate.py --kaggle-resumes data/external/UpdatedResumeDataSet.csv --compare-models</code>; results then appear here.</div>
+    </div>
+  } @else {
+    <div class="card empty">
+      <div class="icon-wrap"><app-icon name="flask" [size]="22" /></div>
+      <h2>No evaluation results yet</h2>
+      <p>Run the evaluation on the hand-labelled sample set to compare TF-IDF, SBERT and the hybrid score.</p>
+      <button class="btn btn-primary" style="margin-top: 16px" (click)="run()" [disabled]="running()">
+        @if (running()) { <span class="spinner"></span> Running… } @else { Run evaluation }
+      </button>
+    </div>
+  }
+</div>
