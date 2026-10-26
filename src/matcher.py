@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import hashlib
+import os
 from pathlib import Path
 
 import numpy as np
@@ -16,10 +17,14 @@ from sklearn.metrics.pairwise import cosine_similarity
 from .preprocess import chunk_text, preprocess, split_sentences
 
 DEFAULT_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+# "sentence-transformers" (PyTorch, default) or "fastembed" (ONNX Runtime, for small servers)
+EMBEDDING_BACKEND = os.environ.get("EMBEDDING_BACKEND", "sentence-transformers")
 AVAILABLE_MODELS = {
     "all-MiniLM-L6-v2 (fast)": "sentence-transformers/all-MiniLM-L6-v2",
     "all-mpnet-base-v2 (more accurate, slower)": "sentence-transformers/all-mpnet-base-v2",
 }
+if EMBEDDING_BACKEND == "fastembed":  # the larger model does not fit a 512 MB server
+    AVAILABLE_MODELS = {"all-MiniLM-L6-v2": DEFAULT_MODEL}
 CACHE_DIR = Path(__file__).resolve().parent.parent / ".cache" / "embeddings"
 
 
@@ -56,14 +61,23 @@ class SemanticMatcher:
     and L2-normalised into a single document vector."""
 
     def __init__(self, model_name: str = DEFAULT_MODEL, device: str | None = None):
-        from sentence_transformers import SentenceTransformer
         self.model_name = model_name
-        self.model = SentenceTransformer(model_name, device=device)
+        self.backend = EMBEDDING_BACKEND
+        if self.backend == "fastembed":
+            # Same pretrained model exported to ONNX: no PyTorch, far less memory (used for deployment).
+            from fastembed import TextEmbedding
+            self.model = TextEmbedding(model_name=model_name)
+        else:
+            from sentence_transformers import SentenceTransformer
+            self.model = SentenceTransformer(model_name, device=device)
         self._short_cache: dict[str, np.ndarray] = {}
         self._doc_cache: dict[str, np.ndarray] = {}
 
     # -- encoding -----------------------------------------------------------------
     def encode(self, texts: list[str], batch_size: int = 32) -> np.ndarray:
+        if self.backend == "fastembed":
+            emb = np.array(list(self.model.embed(texts, batch_size=batch_size)), dtype=np.float32)
+            return emb / (np.linalg.norm(emb, axis=1, keepdims=True) + 1e-12)
         return self.model.encode(texts, batch_size=batch_size, normalize_embeddings=True,
                                  convert_to_numpy=True, show_progress_bar=False)
 

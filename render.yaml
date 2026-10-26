@@ -1,0 +1,9 @@
+# Render Blueprint: New -> Blueprint -> select this repository.
+services:
+  - type: web
+    name: skillmatch
+    runtime: docker
+    dockerfilePath: ./Dockerfile.render
+    plan: free
+    healthCheckPath: /api/health
+    autoDeploy: true
